@@ -85,7 +85,7 @@ def start_process(cmd, typ, start_time, dpath_logs):
     -------
     A subprocess.Popen instance.
     """
-    print('Starting', typ.upper())
+    print(bcolors.BLUE + 'Starting ' + typ.upper() + bcolors.ENDC)
     stdout, stderr = get_stdout_stderr(typ, start_time, dpath_logs)
     with open(stdout, 'wb') as out, open(stderr, 'wb') as err:
         return run(cmd, stdout=out, stderr=err)
@@ -106,30 +106,42 @@ class InitGUI(QtWidgets.QMainWindow):
         self.args = args
         check_files_exist([self.args.script_node_gui, self.args.script_node_slam, self.args.dpath_logs])
 
+        self.p_ros_core = None
+        self.session_gui_node = None
+        self.session_slam_node = None
+
         self.start_time = time.strftime('%Y%m%d_%H%M%S')
 
     def btnClickedRoscore(self):
         self.p_ros_core = start_process(['/opt/ros/melodic/bin/roscore'], 
                                         'ros', self.start_time, self.args.dpath_logs)
-        print('PGID ROS: ', os.getpgid(self.p_ros_core.pid))
+        print(bcolors.GREEN + 'PGID ROS: ' + str(os.getpgid(self.p_ros_core.pid)) + bcolors.ENDC)
 
     def btnClickedGUI(self):
         self.session_gui_node = start_process(['/bin/bash', self.args.script_node_gui],
                                             'gui_node', self.start_time,
                                             self.args.dpath_logs)
-        print('PGID GUI NODE: ', os.getpgid(self.session_gui_node.pid))
+        print(bcolors.GREEN + 'PGID ROS: ' + str(os.getpgid(self.session_gui_node.pid)) + bcolors.ENDC)
 
     def btnClickedSLAM(self):
         self.session_slam_node = start_process(['/bin/bash', self.args.script_node_slam],
                                             'slam_node', self.start_time,
                                             self.args.dpath_logs)
-        print('PGID SLAM NODE: ', os.getpgid(self.session_slam_node.pid))
+        print(bcolors.GREEN + 'PGID ROS: ' + str(os.getpgid(self.session_slam_node.pid)) + bcolors.ENDC)
 
     def btnClickedClose(self):
-        print("Closing all programs")
-        os.killpg(os.getpgid(self.p_ros_core.pid), signal.SIGTERM)
-        os.killpg(os.getpgid(self.session_gui_node.pid), signal.SIGTERM)
-        os.killpg(os.getpgid(self.session_slam_node.pid), signal.SIGTERM)
+        print(bcolors.WARNING + 'Closing all programs' + bcolors.ENDC)
+        if self.p_ros_core is not None:
+            os.killpg(os.getpgid(self.p_ros_core.pid), signal.SIGTERM)
+            self.p_ros_core = None
+
+        if self.session_gui_node is not None:
+            os.killpg(os.getpgid(self.session_gui_node.pid), signal.SIGTERM)
+            self.session_gui_node = None
+        
+        if self.session_slam_node is not None:
+            os.killpg(os.getpgid(self.session_slam_node.pid), signal.SIGTERM)
+            self.session_slam_node = None
 
 # ----------------------------------------------------------------------------------------------------
 
@@ -154,7 +166,7 @@ if __name__ == '__main__':
                         default='/home/aphrodite/programming/dji/catkin_local_control/test2.sh')
 
     parser.add_argument('--dpath_logs', '-l', type=str,
-                        default='/home/aphrodite/programming/playground')
+                        default='/home/aphrodite/programming/inspector_launch')
 
     args = parser.parse_args()
     main(args)
