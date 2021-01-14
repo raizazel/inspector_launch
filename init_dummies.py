@@ -176,18 +176,22 @@ class InitGUI(QtWidgets.QMainWindow):
         if self.p_ros_core is not None:
             os.killpg(os.getpgid(self.p_ros_core.pid), signal.SIGTERM)
             self.p_ros_core = None
-        
+            self.ui.button_roscore.setStyleSheet("background-color: blue")
+
         if self.session_telemetry_node is not None:
             os.killpg(os.getpgid(self.session_telemetry_node.pid), signal.SIGTERM)
             self.session_telemetry_node = None
+            self.ui.button_telemetry.setStyleSheet("background-color: blue")
 
         if self.session_gui_node is not None:
             os.killpg(os.getpgid(self.session_gui_node.pid), signal.SIGTERM)
             self.session_gui_node = None
-        
+            self.ui.button_gui.setStyleSheet("background-color: blue")
+
         if self.session_slam_node is not None:
             os.killpg(os.getpgid(self.session_slam_node.pid), signal.SIGTERM)
             self.session_slam_node = None
+            self.ui.button_slam.setStyleSheet("background-color: blue")
 
 # ----------------------------------------------------------------------------------------------------
 
@@ -206,16 +210,16 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--script_node_telemetry', '-t', type=str,
-                        default='/home/aphrodite/programming/dji/catkin_local_control/test.sh')
+                        default='/home/gunter/programming/catkin_dji/telemetry.sh')
 
     parser.add_argument('--script_node_gui', '-g', type=str,
-                        default='/home/aphrodite/programming/dji/catkin_local_control/test.sh')
+                        default='/home/gunter/programming/inspector_ws_2/gui.sh')
 
     parser.add_argument('--script_node_slam', '-s', type=str,
-                        default='/home/aphrodite/programming/dji/catkin_local_control/test2.sh')
+                        default='/home/gunter/programming/inspector_ws_2/slam.sh')
 
     parser.add_argument('--dpath_logs', '-l', type=str,
-                        default='/home/aphrodite/programming/inspector_launch')
+                        default='/home/gunter/programming/inspector_launch/logs')
 
     args = parser.parse_args()
     main(args)
