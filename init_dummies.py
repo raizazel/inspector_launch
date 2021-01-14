@@ -99,41 +99,87 @@ class InitGUI(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         
         self.ui.button_roscore.clicked.connect(self.btnClickedRoscore)
+        self.ui.button_telemetry.clicked.connect(self.btnClickedTelemetry)
         self.ui.button_gui.clicked.connect(self.btnClickedGUI)
         self.ui.button_slam.clicked.connect(self.btnClickedSLAM)
         self.ui.button_close.clicked.connect(self.btnClickedClose)
 
+        self.ui.button_roscore.setStyleSheet("background-color: blue")
+        self.ui.button_telemetry.setStyleSheet("background-color: blue")
+        self.ui.button_gui.setStyleSheet("background-color: blue")
+        self.ui.button_slam.setStyleSheet("background-color: blue")
+        self.ui.button_close.setStyleSheet("background-color: red")
+
         self.args = args
-        check_files_exist([self.args.script_node_gui, self.args.script_node_slam, self.args.dpath_logs])
+        check_files_exist([self.args.script_node_telemetry, self.args.script_node_gui, self.args.script_node_slam, self.args.dpath_logs])
 
         self.p_ros_core = None
+        self.session_telemetry_node = None
         self.session_gui_node = None
         self.session_slam_node = None
 
         self.start_time = time.strftime('%Y%m%d_%H%M%S')
 
     def btnClickedRoscore(self):
-        self.p_ros_core = start_process(['/opt/ros/melodic/bin/roscore'], 
-                                        'ros', self.start_time, self.args.dpath_logs)
-        print(bcolors.GREEN + 'PGID ROS: ' + str(os.getpgid(self.p_ros_core.pid)) + bcolors.ENDC)
+        if self.p_ros_core is None:
+            self.p_ros_core = start_process(['/opt/ros/melodic/bin/roscore'], 
+                                            'ros', self.start_time, self.args.dpath_logs)
+            print(bcolors.GREEN + 'PGID ROS: ' + str(os.getpgid(self.p_ros_core.pid)) + bcolors.ENDC)
+            self.ui.button_roscore.setStyleSheet("background-color: green")
+        else:
+            print(bcolors.WARNING + 'Closing ROSCORE' + bcolors.ENDC)
+            os.killpg(os.getpgid(self.p_ros_core.pid), signal.SIGTERM)
+            self.p_ros_core = None
+            self.ui.button_roscore.setStyleSheet("background-color: blue")
+
+    def btnClickedTelemetry(self):
+        if self.session_telemetry_node is None:
+            self.session_telemetry_node = start_process(['/bin/bash', self.args.script_node_telemetry],
+                                                'telemetry_node', self.start_time,
+                                                self.args.dpath_logs)
+            print(bcolors.GREEN + 'PGID TELEMETRY: ' + str(os.getpgid(self.session_telemetry_node.pid)) + bcolors.ENDC)
+            self.ui.button_telemetry.setStyleSheet("background-color: green")
+        else:
+            print(bcolors.WARNING + 'Closing TELEMETRY' + bcolors.ENDC)
+            os.killpg(os.getpgid(self.session_telemetry_node.pid), signal.SIGTERM)
+            self.session_telemetry_node = None
+            self.ui.button_telemetry.setStyleSheet("background-color: blue")
 
     def btnClickedGUI(self):
-        self.session_gui_node = start_process(['/bin/bash', self.args.script_node_gui],
-                                            'gui_node', self.start_time,
-                                            self.args.dpath_logs)
-        print(bcolors.GREEN + 'PGID ROS: ' + str(os.getpgid(self.session_gui_node.pid)) + bcolors.ENDC)
+        if self.session_gui_node is None:
+            self.session_gui_node = start_process(['/bin/bash', self.args.script_node_gui],
+                                                'gui_node', self.start_time,
+                                                self.args.dpath_logs)
+            print(bcolors.GREEN + 'PGID GUI: ' + str(os.getpgid(self.session_gui_node.pid)) + bcolors.ENDC)
+            self.ui.button_gui.setStyleSheet("background-color: green")
+        else:
+            print(bcolors.WARNING + 'Closing GUI' + bcolors.ENDC)
+            os.killpg(os.getpgid(self.session_gui_node.pid), signal.SIGTERM)
+            self.session_gui_node = None
+            self.ui.button_gui.setStyleSheet("background-color: blue")
 
     def btnClickedSLAM(self):
-        self.session_slam_node = start_process(['/bin/bash', self.args.script_node_slam],
-                                            'slam_node', self.start_time,
-                                            self.args.dpath_logs)
-        print(bcolors.GREEN + 'PGID ROS: ' + str(os.getpgid(self.session_slam_node.pid)) + bcolors.ENDC)
+        if self.session_slam_node is None:
+            self.session_slam_node = start_process(['/bin/bash', self.args.script_node_slam],
+                                                'slam_node', self.start_time,
+                                                self.args.dpath_logs)
+            print(bcolors.GREEN + 'PGID SLAM: ' + str(os.getpgid(self.session_slam_node.pid)) + bcolors.ENDC)
+            self.ui.button_slam.setStyleSheet("background-color: green")
+        else:
+            print(bcolors.WARNING + 'Closing SLAM' + bcolors.ENDC)
+            os.killpg(os.getpgid(self.session_slam_node.pid), signal.SIGTERM)
+            self.session_slam_node = None
+            self.ui.button_slam.setStyleSheet("background-color: blue")
 
     def btnClickedClose(self):
         print(bcolors.WARNING + 'Closing all programs' + bcolors.ENDC)
         if self.p_ros_core is not None:
             os.killpg(os.getpgid(self.p_ros_core.pid), signal.SIGTERM)
             self.p_ros_core = None
+        
+        if self.session_telemetry_node is not None:
+            os.killpg(os.getpgid(self.session_telemetry_node.pid), signal.SIGTERM)
+            self.session_telemetry_node = None
 
         if self.session_gui_node is not None:
             os.killpg(os.getpgid(self.session_gui_node.pid), signal.SIGTERM)
@@ -159,14 +205,17 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('--script_node_telemetry', '-t', type=str,
+                        default='/home/aphrodite/programming/dji/catkin_local_control/test.sh')
+
     parser.add_argument('--script_node_gui', '-g', type=str,
-                        default='/home/gunter/programming/inspector_ws_2/gui.sh')
+                        default='/home/aphrodite/programming/dji/catkin_local_control/test.sh')
 
     parser.add_argument('--script_node_slam', '-s', type=str,
-                        default='/home/gunter/programming/inspector_ws_2/slam.sh')
+                        default='/home/aphrodite/programming/dji/catkin_local_control/test2.sh')
 
     parser.add_argument('--dpath_logs', '-l', type=str,
-                        default='/home/gunter/programming/inspector_launch')
+                        default='/home/aphrodite/programming/inspector_launch')
 
     args = parser.parse_args()
     main(args)

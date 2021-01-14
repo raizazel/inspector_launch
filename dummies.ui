@@ -34,7 +34,20 @@
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="0" column="0">
            <layout class="QGridLayout" name="grid_scroll">
-            <item row="1" column="0">
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_telemetry">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>TELEMETRY:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
              <widget class="QLabel" name="label_gui">
               <property name="maximumSize">
                <size>
@@ -47,8 +60,8 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_roscore">
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_close">
               <property name="maximumSize">
                <size>
                 <width>100</width>
@@ -56,11 +69,11 @@
                </size>
               </property>
               <property name="text">
-               <string>ROSCORE:</string>
+               <string>Close all:</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="3" column="1">
              <widget class="QPushButton" name="button_gui">
               <property name="maximumSize">
                <size>
@@ -86,20 +99,7 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_slam">
-              <property name="maximumSize">
-               <size>
-                <width>100</width>
-                <height>30</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>SLAM:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
+            <item row="4" column="1">
              <widget class="QPushButton" name="button_slam">
               <property name="maximumSize">
                <size>
@@ -112,8 +112,8 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_close">
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_slam">
               <property name="maximumSize">
                <size>
                 <width>100</width>
@@ -121,11 +121,24 @@
                </size>
               </property>
               <property name="text">
-               <string>Close all:</string>
+               <string>SLAM:</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_roscore">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>ROSCORE:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
              <widget class="QPushButton" name="button_close">
               <property name="maximumSize">
                <size>
@@ -135,6 +148,19 @@
               </property>
               <property name="text">
                <string>Close</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="button_telemetry">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Init</string>
               </property>
              </widget>
             </item>
