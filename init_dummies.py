@@ -160,13 +160,13 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--script_node_gui', '-g', type=str,
-                        default='/home/aphrodite/programming/dji/catkin_local_control/test.sh')
+                        default='/home/gunter/programming/inspector_ws_2/gui.sh')
 
     parser.add_argument('--script_node_slam', '-s', type=str,
-                        default='/home/aphrodite/programming/dji/catkin_local_control/test2.sh')
+                        default='/home/gunter/programming/inspector_ws_2/slam.sh')
 
     parser.add_argument('--dpath_logs', '-l', type=str,
-                        default='/home/aphrodite/programming/inspector_launch')
+                        default='/home/gunter/programming/inspector_launch')
 
     args = parser.parse_args()
     main(args)
