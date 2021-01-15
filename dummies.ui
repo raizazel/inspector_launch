@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>250</width>
-    <height>200</height>
+    <height>250</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,7 +28,7 @@
            <x>0</x>
            <y>0</y>
            <width>228</width>
-           <height>178</height>
+           <height>228</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
@@ -47,7 +47,7 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="4" column="0">
              <widget class="QLabel" name="label_gui">
               <property name="maximumSize">
                <size>
@@ -60,7 +60,7 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
+            <item row="6" column="0">
              <widget class="QLabel" name="label_close">
               <property name="maximumSize">
                <size>
@@ -73,7 +73,7 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="4" column="1">
              <widget class="QPushButton" name="button_gui">
               <property name="maximumSize">
                <size>
@@ -99,7 +99,7 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
+            <item row="5" column="1">
              <widget class="QPushButton" name="button_slam">
               <property name="maximumSize">
                <size>
@@ -112,7 +112,7 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
+            <item row="5" column="0">
              <widget class="QLabel" name="label_slam">
               <property name="maximumSize">
                <size>
@@ -138,7 +138,7 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
+            <item row="6" column="1">
              <widget class="QPushButton" name="button_close">
               <property name="maximumSize">
                <size>
@@ -153,6 +153,32 @@
             </item>
             <item row="2" column="1">
              <widget class="QPushButton" name="button_telemetry">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Init</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_img">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>IMAGE:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QPushButton" name="button_img">
               <property name="maximumSize">
                <size>
                 <width>100</width>
