@@ -1,8 +1,5 @@
 
-from PyQt5 import QtWidgets
-from dummies import Ui_MainWindow 
 import sys
-
 import os
 import signal
 from subprocess import Popen
@@ -12,6 +9,7 @@ import time
 
 class bcolors:    
     BLUE = '\033[94m'
+    PINK = '\033[95m'
     GREEN = '\033[92m'
     WARNING = '\033[93m'
     FAIL = '\033[91m'
@@ -92,127 +90,78 @@ def start_process(cmd, typ, start_time, dpath_logs):
 
 # ----------------------------------------------------------------------------------------------------
 
-class InitGUI(QtWidgets.QMainWindow):
+class InitCmds():
     def __init__(self, args):
-        super(InitGUI, self).__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
-        
-        self.ui.button_roscore.clicked.connect(self.btnClickedRoscore)
-        self.ui.button_telemetry.clicked.connect(self.btnClickedTelemetry)
-        self.ui.button_img.clicked.connect(self.btnClickedImg)
-        self.ui.button_gui.clicked.connect(self.btnClickedGUI)
-        self.ui.button_slam.clicked.connect(self.btnClickedSLAM)
-        self.ui.button_close.clicked.connect(self.btnClickedClose)
-
-        self.ui.button_roscore.setStyleSheet("background-color: blue")
-        self.ui.button_telemetry.setStyleSheet("background-color: blue")
-        self.ui.button_img.setStyleSheet("background-color: blue")
-        self.ui.button_gui.setStyleSheet("background-color: blue")
-        self.ui.button_slam.setStyleSheet("background-color: blue")
-        self.ui.button_close.setStyleSheet("background-color: red")
-
         self.args = args
-        check_files_exist([self.args.script_node_telemetry, self.args.script_node_img, self.args.script_node_gui, self.args.script_node_slam, self.args.dpath_logs])
+        # check_files_exist([self.args.script_node_telemetry, self.args.script_node_img, self.args.script_node_slam, self.args.dpath_logs])
 
         self.p_ros_core = None
         self.session_telemetry_node = None
         self.session_img_node = None
-        self.session_gui_node = None
         self.session_slam_node = None
 
         self.start_time = time.strftime('%Y%m%d_%H%M%S')
 
-    def btnClickedRoscore(self):
+    def nodeRoscore(self):
         if self.p_ros_core is None:
-            self.p_ros_core = start_process(['/opt/ros/melodic/bin/roscore'], 
+            self.p_ros_core = start_process(['/opt/ros/noetic/bin/roscore'], 
                                             'ros', self.start_time, self.args.dpath_logs)
             print(bcolors.GREEN + 'PGID ROS: ' + str(os.getpgid(self.p_ros_core.pid)) + bcolors.ENDC)
-            self.ui.button_roscore.setStyleSheet("background-color: green")
         else:
             print(bcolors.WARNING + 'Closing ROSCORE' + bcolors.ENDC)
             os.killpg(os.getpgid(self.p_ros_core.pid), signal.SIGTERM)
             self.p_ros_core = None
-            self.ui.button_roscore.setStyleSheet("background-color: blue")
 
-    def btnClickedTelemetry(self):
+    def nodeTelemetry(self):
         if self.session_telemetry_node is None:
             self.session_telemetry_node = start_process(['/bin/bash', self.args.script_node_telemetry],
                                                 'telemetry_node', self.start_time,
                                                 self.args.dpath_logs)
             print(bcolors.GREEN + 'PGID TELEMETRY: ' + str(os.getpgid(self.session_telemetry_node.pid)) + bcolors.ENDC)
-            self.ui.button_telemetry.setStyleSheet("background-color: green")
         else:
             print(bcolors.WARNING + 'Closing TELEMETRY' + bcolors.ENDC)
             os.killpg(os.getpgid(self.session_telemetry_node.pid), signal.SIGTERM)
             self.session_telemetry_node = None
-            self.ui.button_telemetry.setStyleSheet("background-color: blue")
 
-    def btnClickedImg(self):
+    def nodeImg(self):
         if self.session_img_node is None:
             self.session_img_node = start_process(['/bin/bash', self.args.script_node_img],
                                                 'img_node', self.start_time,
                                                 self.args.dpath_logs)
             print(bcolors.GREEN + 'PGID IMG: ' + str(os.getpgid(self.session_img_node.pid)) + bcolors.ENDC)
-            self.ui.button_img.setStyleSheet("background-color: green")
         else:
             print(bcolors.WARNING + 'Closing IMG' + bcolors.ENDC)
             os.killpg(os.getpgid(self.session_img_node.pid), signal.SIGTERM)
             self.session_img_node = None
-            self.ui.button_img.setStyleSheet("background-color: blue")
 
-    def btnClickedGUI(self):
-        if self.session_gui_node is None:
-            self.session_gui_node = start_process(['/bin/bash', self.args.script_node_gui],
-                                                'gui_node', self.start_time,
-                                                self.args.dpath_logs)
-            print(bcolors.GREEN + 'PGID GUI: ' + str(os.getpgid(self.session_gui_node.pid)) + bcolors.ENDC)
-            self.ui.button_gui.setStyleSheet("background-color: green")
-        else:
-            print(bcolors.WARNING + 'Closing GUI' + bcolors.ENDC)
-            os.killpg(os.getpgid(self.session_gui_node.pid), signal.SIGTERM)
-            self.session_gui_node = None
-            self.ui.button_gui.setStyleSheet("background-color: blue")
-
-    def btnClickedSLAM(self):
+    def nodeSLAM(self):
         if self.session_slam_node is None:
             self.session_slam_node = start_process(['/bin/bash', self.args.script_node_slam],
                                                 'slam_node', self.start_time,
                                                 self.args.dpath_logs)
             print(bcolors.GREEN + 'PGID SLAM: ' + str(os.getpgid(self.session_slam_node.pid)) + bcolors.ENDC)
-            self.ui.button_slam.setStyleSheet("background-color: green")
         else:
             print(bcolors.WARNING + 'Closing SLAM' + bcolors.ENDC)
             os.killpg(os.getpgid(self.session_slam_node.pid), signal.SIGTERM)
             self.session_slam_node = None
-            self.ui.button_slam.setStyleSheet("background-color: blue")
 
-    def btnClickedClose(self):
+    def close(self):
         print(bcolors.WARNING + 'Closing all programs' + bcolors.ENDC)
         if self.p_ros_core is not None:
             os.killpg(os.getpgid(self.p_ros_core.pid), signal.SIGTERM)
             self.p_ros_core = None
-            self.ui.button_roscore.setStyleSheet("background-color: blue")
 
         if self.session_telemetry_node is not None:
             os.killpg(os.getpgid(self.session_telemetry_node.pid), signal.SIGTERM)
             self.session_telemetry_node = None
-            self.ui.button_telemetry.setStyleSheet("background-color: blue")
         
         if self.session_img_node is not None:
             os.killpg(os.getpgid(self.session_img_node.pid), signal.SIGTERM)
             self.session_img_node = None
-            self.ui.button_img.setStyleSheet("background-color: blue")
-
-        if self.session_gui_node is not None:
-            os.killpg(os.getpgid(self.session_gui_node.pid), signal.SIGTERM)
-            self.session_gui_node = None
-            self.ui.button_gui.setStyleSheet("background-color: blue")
 
         if self.session_slam_node is not None:
             os.killpg(os.getpgid(self.session_slam_node.pid), signal.SIGTERM)
             self.session_slam_node = None
-            self.ui.button_slam.setStyleSheet("background-color: blue")
 
     def __del__(self):
         print(bcolors.WARNING + 'Closing all programs' + bcolors.ENDC)
@@ -225,22 +174,46 @@ class InitGUI(QtWidgets.QMainWindow):
         if self.session_img_node is not None:
             os.killpg(os.getpgid(self.session_img_node.pid), signal.SIGTERM)
             
-        if self.session_gui_node is not None:
-            os.killpg(os.getpgid(self.session_gui_node.pid), signal.SIGTERM)
-            
         if self.session_slam_node is not None:
             os.killpg(os.getpgid(self.session_slam_node.pid), signal.SIGTERM)
             
 # ----------------------------------------------------------------------------------------------------
 
 def main(args):
-    app = QtWidgets.QApplication([])
 
-    dummies_gui = InitGUI(args)
-    dummies_gui.show()
+    dummies_init = InitCmds(args)
 
-    sys.exit(app.exec())
+    print(bcolors.BLUE + 'Init Script for launch nodes in remote.' + bcolors.ENDC)
+    dummies_init.nodeRoscore()
 
+    print(bcolors.PINK + 'Use 1 for launch Telemetry node.' + bcolors.ENDC)
+    print(bcolors.PINK + 'Use 2 for launch Camera node.' + bcolors.ENDC)
+    print(bcolors.PINK + 'Use 3 for launch SLAM node.' + bcolors.ENDC)
+    print(bcolors.PINK + 'Use 9 for close existing nodes and relaunch Roscore.' + bcolors.ENDC)
+    print(bcolors.PINK + 'Use 0 for script exit.' + bcolors.ENDC)
+
+    finishRead = False
+    for line in sys.stdin:
+        for var in line.split():
+            var = int(var)
+            if var == 1:
+                dummies_init.nodeTelemetry()
+            elif var == 2:
+                dummies_init.nodeImg()
+            elif var == 3:
+                dummies_init.nodeSLAM()
+            elif var == 9:
+                dummies_init.close()
+                dummies_init.nodeRoscore()
+            elif var == 0:
+                finishRead = True
+            else:
+                print(bcolors.WARNING + 'Number error, please use 1 or 0. Thanks' + bcolors.ENDC)
+        if finishRead:
+            break
+    
+    print(bcolors.FAIL + 'Exiting...' + bcolors.ENDC)
+    
 # ----------------------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
@@ -253,14 +226,11 @@ if __name__ == '__main__':
     parser.add_argument('--script_node_img', '-i', type=str,
                         default='/home/gunter/programming/inspector_ws_2/img.sh')
 
-    parser.add_argument('--script_node_gui', '-g', type=str,
-                        default='/home/gunter/programming/inspector_ws_2/gui.sh')
-
     parser.add_argument('--script_node_slam', '-s', type=str,
                         default='/home/gunter/programming/inspector_ws_2/slam.sh')
 
     parser.add_argument('--dpath_logs', '-l', type=str,
-                        default='/home/gunter/programming/inspector_launch/logs')
+                        default='/home/manuoso/programming/inspector_launch/logs')
     
     args = parser.parse_args()
     main(args)

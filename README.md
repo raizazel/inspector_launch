@@ -1,9 +1,9 @@
 # inspector_launch
 
-Simple GUI for launch INSPECTOR-AICIA programs.
+Simple Script for launch INSPECTOR-AICIA programs.
 
-# Dependencies
+# Use
 
 ```
-    sudo apt install python3-pyqt5
+    python3 init_dummies.py
 ```
