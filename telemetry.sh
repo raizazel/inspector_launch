@@ -1,1 +1,1 @@
-rosrun dji_control dji_control Downloads/config_dal.json
+rosrun dji_control dji_control home/grvc/Downloads/config_dal.json
