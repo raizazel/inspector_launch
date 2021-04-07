@@ -1,0 +1,2 @@
+source inspector_ws/devel/setup.bash
+rosrun inspector_orbslam2 inspector_orbslam2_rgbd

@@ -1,0 +1,1 @@
+rosrun dji_control dji_control Downloads/config_dal.json
