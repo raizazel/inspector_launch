@@ -104,7 +104,7 @@ class InitCmds():
 
     def nodeRoscore(self):
         if self.p_ros_core is None:
-            self.p_ros_core = start_process(['/opt/ros/noetic/bin/roscore'], 
+            self.p_ros_core = start_process(['/opt/ros/melodic/bin/roscore'], 
                                             'ros', self.start_time, self.args.dpath_logs)
             print(bcolors.GREEN + 'PGID ROS: ' + str(os.getpgid(self.p_ros_core.pid)) + bcolors.ENDC)
         else:
